@@ -16,9 +16,9 @@
 #import "ZMSDKJoinOnly.h"
 #import "ZMSDKCommonHelper.h"
 
-#define kZoomSDKDomain      @""
-#define kZoomSDKKey         @""
-#define kZoomSDKSecret      @""
+#define kZoomSDKDomain      @"zoom.us"
+#define kZoomSDKKey         @"REPGhcDDYdt4yGjEwu0znrcUlqJOI3wwIQ8U"
+#define kZoomSDKSecret      @"AvBF3nS0zYuMlyWKkLMYQgC6lcDVlubljIcF"
 #define kZoomSDKAPIKey      @""
 #define kZoomSDKAPISecret   @""
 
@@ -37,6 +37,14 @@
 - (void)windowDidLoad {
     [super windowDidLoad];
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    
+    [ZMSDKInitHelper initSDK:YES];
+    [self initHelper];
+    [ZMSDKInitHelper setDomain:kZoomSDKDomain];
+    
+    [_authHelper auth:kZoomSDKKey Secret:kZoomSDKSecret];
+    
+    [self switchToLoginTab];
 }
 -(void)awakeFromNib
 {
@@ -113,6 +121,8 @@
     [self.window setLevel:NSPopUpMenuWindowLevel];
     [self.window center];
 }
+
+/*
 - (IBAction)onSetDomainClicked:(id)sender
 {
     BOOL useCustomizedUI = NO;
@@ -120,11 +130,13 @@
         useCustomizedUI = YES;
     [ZMSDKInitHelper initSDK:useCustomizedUI];
     [self initHelper];
-    //[ZMSDKInitHelper setDomain:kZoomSDKDomain];
-    [ZMSDKInitHelper setDomain:_setDomainTextField.stringValue];
+    [ZMSDKInitHelper setDomain:kZoomSDKDomain];
+    //[ZMSDKInitHelper setDomain:_setDomainTextField.stringValue];
     [self switchToAuthTab];
 }
+*/
 
+/*
 - (IBAction)onAuthWithJwtTokenClick:(id)sender {
     
     if (_chooseAuthJWTToken.state == NSOnState) {
@@ -138,14 +150,17 @@
 
 - (IBAction)onAuthClicked:(id)sender
 {
-    //[_authHelper auth:kZoomSDKKey Secret:kZoomSDKSecret];
+    [_authHelper auth:kZoomSDKKey Secret:kZoomSDKSecret];
+ 
     if (_chooseAuthJWTToken.state == NSOnState) {
-        
+ 
         [_authHelper newAuth:_sdkKeyTextField.stringValue];
     }else{
         [_authHelper auth:_sdkKeyTextField.stringValue Secret:_sdkSecretTextField.stringValue];
     }
 }
+*/
+
 - (IBAction)onEmailLoginClicked:(id)sender
 {
     if(_emailTextField.stringValue.length > 0)

@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "ZMSDKMainWindowController.h"
 
-@interface ZMSDKEmailMeetingInterface : NSObject
+@interface ZMSDKEmailMeetingInterface : NSObject<ZoomSDKMeetingServiceDelegate>
 
 - (ZoomSDKError)startVideoMeetingForEmailUser;
 - (ZoomSDKError)startAudioMeetingForEmailUser;
 - (ZoomSDKError)joinMeetingForEmailUser:(NSString*)meetingNumber displayName:(NSString*)name password:(NSString*)psw;
+
 @end

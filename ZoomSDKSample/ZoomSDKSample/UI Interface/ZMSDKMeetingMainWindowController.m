@@ -16,6 +16,7 @@
 #import "ZMSDKButton.h"
 #import "ZMSDKShareSelectWindow.h"
 #import "ZMSDKThumbnailView.h"
+#import "ZMSDKGalleryWindowController.h"
 
 
 const int DEFAULT_Toolbar_Button_height = 60;
@@ -93,11 +94,13 @@ const int DEFAULT_Thumbnail_View_Width = 320;
 {
     [self initUI];
 }
+
 - (void)uninitNotification
 {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self];
 }
+
 -(void)initNotification
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:nil];
@@ -144,6 +147,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     [self cleanUp];
     [super dealloc];
 }
+
 - (void)initUI
 {
     [self.window setFrame:NSMakeRect(0, 0, 1100, 700) display:YES];
@@ -156,12 +160,15 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     _thumbnailView = [[ZMSDKThumbnailView alloc] initWithFrame:NSMakeRect(self.window.contentView.frame.size.width - DEFAULT_Thumbnail_View_Width, self.window.contentView.frame.origin.y, DEFAULT_Thumbnail_View_Width, self.window.contentView.frame.size.height)];
     [_thumbnailView setMeetingMainWindowController:self];
     
+    _galleryWindow = [[ZMSDKGalleryWindowController alloc] initWithWindowNibName:@"ZMSDKGalleryWindowController"];
+    [_galleryWindow setMeetingMainWindowController:self];
+    
     [self initActiveVideoUserView];
     [self initButtons];
 }
+
 - (void)initButtons
 {
-    
     float xpos = self.window.contentView.frame.size.width/2;
     float xposLeft = xpos;
     float xposRight = xpos;
@@ -196,7 +203,6 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     theButton.imagePosition = NSImageAbove;
     theButton.image = [NSImage imageNamed:@"toolbar_mute_voip_normal"];
     theButton.pressImage = [NSImage imageNamed:@"toolbar_mute_voip_press"];
-    
     theButton.autoresizingMask = NSViewMaxXMargin;
     [theButton setTarget:self];
     [theButton setAction:@selector(onAudioButtonClicked:)];
@@ -227,7 +233,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     xposLeft -= width + margin;
     
     theButton = [[ZMSDKButton alloc] initWithFrame:NSMakeRect(xposLeft, yPos, width, height)];
-    theButton.tag = BUTTON_TAG_ThUMBNAIL_VIEW;
+    theButton.tag = BUTTON_TAG_THUMBNAIL_VIEW;
     theButton.title = @"Thumbnail Video";
     theButton.image = [NSImage imageNamed:@"toolbar_participant_normal"];
     theButton.pressImage = [NSImage imageNamed:@"toolbar_participant_press"];
@@ -248,10 +254,29 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     
     theButton = [[ZMSDKButton alloc] initWithFrame:NSMakeRect(xposLeft, yPos, width, height)];
     theButton.tag = BUTTON_TAG_PARTICIPANT;
+    theButton.title = @"Gallery";
+    theButton.image = [NSImage imageNamed:@"toolbar_participant_normal"];
+    theButton.pressImage = [NSImage imageNamed:@"toolbar_participant_press"];
+    theButton.titleColor = titleColor;
+    theButton.pressTitleColor = pressTitleColor;
+    theButton.font = theFont;
+    theButton.hoverBackgroundColor = hoverBgColor;
+    theButton.pressBackgoundColor = pressBgColor;
+    theButton.imagePosition = NSImageAbove;
+    theButton.autoresizingMask = NSViewMinXMargin|NSViewMaxXMargin;
+    [theButton setTarget:self];
+    [theButton setAction:@selector(onGalleryButtonClicked:)];
+    [theButton setHidden:YES];
+    [self.window.contentView addSubview:theButton];
+    [theButton release];
+    theButton = nil;
+    xposLeft -= width + margin;
+    
+    theButton = [[ZMSDKButton alloc] initWithFrame:NSMakeRect(xposLeft, yPos, width, height)];
+    theButton.tag = BUTTON_TAG_PARTICIPANT;
     theButton.title = @"Participants";
     theButton.image = [NSImage imageNamed:@"toolbar_participant_normal"];
     theButton.pressImage = [NSImage imageNamed:@"toolbar_participant_press"];
-    
     theButton.titleColor = titleColor;
     theButton.pressTitleColor = pressTitleColor;
     theButton.font = theFont;
@@ -305,6 +330,27 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     [self.window.contentView addSubview:theButton];
     [theButton release];
     theButton = nil;
+    xposRight += width + margin;
+    xposLeft -= width + margin;
+    
+    theButton = [[ZMSDKButton alloc] initWithFrame:NSMakeRect(xposRight, yPos, width, height)];
+    theButton.tag = BUTTON_TAG_INVITE;
+    theButton.title = @"Invite";
+    theButton.image = [NSImage imageNamed:@"toolbar_share_stop"];
+    theButton.pressImage = [NSImage imageNamed:@"toolbar_share_stop"];
+    theButton.titleColor = titleColor;
+    theButton.pressTitleColor = pressTitleColor;
+    theButton.font = theFont;
+    theButton.hoverBackgroundColor = hoverBgColor;
+    theButton.pressBackgoundColor = pressBgColor;
+    theButton.imagePosition = NSImageAbove;
+    theButton.autoresizingMask = NSViewMinXMargin|NSViewMaxXMargin;
+    [theButton setTarget:self];
+    [theButton setAction:@selector(onInviteButtonClicked:)];
+    [theButton setHidden:NO];
+    [self.window.contentView addSubview:theButton];
+    [theButton release];
+    theButton = nil;
 }
 
 - (void)onThumbnailButtonClicked:(id)sender
@@ -328,6 +374,12 @@ const int DEFAULT_Thumbnail_View_Width = 320;
         [_activeUserVideo resize:NSMakeRect(rect.origin.x, rect.origin.y + DEFAULT_Toolbar_Button_height + 2, self.window.frame.size.width, rect.size.height - DEFAULT_Toolbar_Button_height - 2)];
     }
 }
+
+- (void)onGalleryButtonClicked:(id)sender
+{
+    [_galleryWindow showSelf];
+}
+
 - (void)onParticipantButtonClicked:(id)sender
 {
     if(!_panelistUserView.superview)
@@ -376,10 +428,10 @@ const int DEFAULT_Thumbnail_View_Width = 320;
             break;
     }
 }
+
 - (void)onVideoButtonClicked:(id)sender
 {
     ZoomSDKMeetingService* meetingService = [[ZoomSDK sharedSDK] getMeetingService];
-   
     if(self.mySelfUserInfo)
     {
         if([self.mySelfUserInfo isVideoOn])
@@ -392,14 +444,23 @@ const int DEFAULT_Thumbnail_View_Width = 320;
         }
     }
 }
+
 - (void)onStopShareButtonClicked:(id)sender
 {
     ZoomSDKError ret = ZoomSDKError_Failed;
     if(_shareSelectWindowCtr)
-       ret = [_shareSelectWindowCtr stopShare];
+        ret = [_shareSelectWindowCtr stopShare];
     ZMSDKButton* stopShareButton = [self.window.contentView viewWithTag:BUTTON_TAG_STOP_SHARE];
     if(stopShareButton && ret == ZoomSDKError_Success)
-       [stopShareButton setHidden:YES];
+        [stopShareButton setHidden:YES];
+}
+
+- (void)onInviteButtonClicked:(id)sender
+{
+    ZoomSDKH323Helper* inviteHelper = [[ZoomSDKH323Helper alloc] init];
+    ZoomSDKError ret = [inviteHelper inviteToMeetingByDefaultMail];
+    if (ret != ZoomSDKError_Success)
+        NSLog(@"Invite did not succeed");
 }
 
 -(void)updateInMeetingUI
@@ -416,7 +477,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     theButton = [self.window.contentView viewWithTag:BUTTON_TAG_SHARE];
     if(theButton)
         [theButton setHidden:NO];
-    theButton = [self.window.contentView viewWithTag:BUTTON_TAG_ThUMBNAIL_VIEW];
+    theButton = [self.window.contentView viewWithTag:BUTTON_TAG_THUMBNAIL_VIEW];
     if(theButton)
         [theButton setHidden:NO];
     
@@ -445,6 +506,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
 {
     [_panelistUserView onUserJoin:userID];
     [_thumbnailView onUserJoin:userID];
+    [_galleryWindow onUserJoin:userID];
 }
 - (void)initActiveVideoUserView
 {
@@ -461,6 +523,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
 {
     [_panelistUserView onUserleft:userID];
     [_thumbnailView onUserleft:userID];
+    [_galleryWindow onUserleft:userID];
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -476,6 +539,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
 - (void)resetInfo
 {
     [_thumbnailView resetInfo];
+    [_galleryWindow resetInfo];
     if(_activeUserVideo)
     {
         ZoomSDKVideoContainer* videoContainer = [[[ZoomSDK sharedSDK] getMeetingService] getVideoContainer];
@@ -500,7 +564,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
     theButton = [self.window.contentView viewWithTag:BUTTON_TAG_SHARE];
     if(theButton)
         [theButton setHidden:YES];
-    theButton = [self.window.contentView viewWithTag:BUTTON_TAG_ThUMBNAIL_VIEW];
+    theButton = [self.window.contentView viewWithTag:BUTTON_TAG_THUMBNAIL_VIEW];
     if(theButton)
         [theButton setHidden:YES];
 }
@@ -563,9 +627,11 @@ const int DEFAULT_Thumbnail_View_Width = 320;
         NSLog(@"userID %d status:%d type:%d", userID, status, type);
     }
 }
+
 - (void)onUserVideoStatusChange:(BOOL)videoOn UserID:(unsigned int)userID
 {
     [_thumbnailView onUserVideoStatusChange:videoOn UserID:userID];
+    [_galleryWindow onUserVideoStatusChange:videoOn UserID:userID];
     ZMSDKButton* theButton = [self.window.contentView viewWithTag:BUTTON_TAG_VIDEO];
     if(theButton && !theButton.isHidden)
     {
@@ -588,6 +654,7 @@ const int DEFAULT_Thumbnail_View_Width = 320;
         }
     }
 }
+
 - (void)updateToolbarAudioButtonsWithAudioType:(ZoomSDKAudioType)audioType audioStatus:(ZoomSDKAudioStatus)status
 {
     ZMSDKButton* theButton = [self.window.contentView viewWithTag:BUTTON_TAG_AUDIO];

@@ -13,6 +13,7 @@
 @class ZMSDKTrackingButton;
 @class ZMSDKHCPanelistsView;
 @class ZMSDKThumbnailView;
+@class ZMSDKGalleryWindowController;
 
 enum MeetiongToolbarButtonTags
 {
@@ -22,7 +23,8 @@ enum MeetiongToolbarButtonTags
     BUTTON_TAG_SHARE,
     BUTTON_TAG_PARTICIPANT,
     BUTTON_TAG_STOP_SHARE,
-    BUTTON_TAG_ThUMBNAIL_VIEW,
+    BUTTON_TAG_THUMBNAIL_VIEW,
+    BUTTON_TAG_INVITE
 };
 
 typedef enum
@@ -47,8 +49,6 @@ typedef enum
 
 @end
 
-
-
 @interface ZMSDKMeetingMainWindowController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate>
 {
     NSButton*              _manegePanelistButton;
@@ -57,6 +57,7 @@ typedef enum
     NSWindow*              _meetingMainWindow;
     ZMSDKHCPanelistsView*  _panelistUserView;
     ZMSDKThumbnailView*    _thumbnailView;
+    ZMSDKGalleryWindowController*    _galleryWindow;
     SelfAudioStatus        _audioStatus;
     ZoomSDKUserInfo*       _mySelfUserInfo;
 }

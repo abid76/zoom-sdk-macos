@@ -7,6 +7,7 @@
 //
 
 #import "ZMSDKEmailMeetingInterface.h"
+#import "ZoomSDKWindowController.h"
 
 @implementation ZMSDKEmailMeetingInterface
 - (id)init
@@ -28,9 +29,31 @@
     [self cleanUp];
     [super dealloc];
 }
+
+- (void)onMeetingStatusChange:(ZoomSDKMeetingStatus)state meetingError:(ZoomSDKMeetingError)error EndReason:(EndMeetingReason)reason
+{
+    /*
+    ZoomSDKVideoContainer* videoContainer = [[[ZoomSDK sharedSDK] getMeetingService] getVideoContainer];
+    if (state == ZoomSDKMeetingStatus_Connecting)
+    {
+        //Usage
+        ZoomSDKPreViewVideoElement* preElement = [[ZoomSDKPreViewVideoElement alloc] initWithFrame: NSMakeRect(0, 0, 320, 240)];
+        [videoContainer createVideoElement: & preElement];
+        [preElement startPreview: YES];
+    }
+    else if (state == ZoomSDKMeetingStatus_InMeeting)
+    {
+        ZoomSDKNormalVideoElement* normalElement = [[ZoomSDKNormalVideoElement alloc] initWithFrame: NSMakeRect(0, 0, 320, 240)];
+        [videoContainer createVideoElement: &normalElement];
+        [normalElement subscribeVideo: YES];
+    }
+     */
+}
+
 - (ZoomSDKError)startVideoMeetingForEmailUser
 {
     ZoomSDKMeetingService* meetingService = [[ZoomSDK sharedSDK] getMeetingService];
+    
     if (meetingService)
     {
         ZoomSDKError ret = [meetingService startMeeting:ZoomSDKUserType_ZoomUser userID:nil userToken:nil displayName:nil meetingNumber:0 isDirectShare:NO sharedApp:0 isVideoOff:NO isAuidoOff:NO vanityID:nil];
@@ -38,6 +61,7 @@
     }
     return ZoomSDKError_Failed;
 }
+
 - (ZoomSDKError)startAudioMeetingForEmailUser
 {
     ZoomSDKMeetingService* meetingService = [[ZoomSDK sharedSDK] getMeetingService];
@@ -48,6 +72,7 @@
     }
     return ZoomSDKError_Failed;
 }
+
 - (ZoomSDKError)joinMeetingForEmailUser:(NSString*)meetingNumber displayName:(NSString*)name password:(NSString*)psw
 {
     ZoomSDKMeetingService* meetingService = [[ZoomSDK sharedSDK] getMeetingService];

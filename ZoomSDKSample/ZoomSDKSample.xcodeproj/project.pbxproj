@@ -95,6 +95,10 @@
 		5D8F8EC4222402330020F8E6 /* timezones.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5D8F8EC2222402330020F8E6 /* timezones.txt */; };
 		5D8F8ECE222402C80020F8E6 /* SDK_Transcode.app in Copy Files */ = {isa = PBXBuildFile; fileRef = 5D38E0A0221BF5C500957333 /* SDK_Transcode.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5D8F8ECF222402D50020F8E6 /* ZoomSDKVideoUI.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 5D38E0A1221BF5C500957333 /* ZoomSDKVideoUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		81295D702438EA370032ECB8 /* ZMSDKGalleryWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81295D6E2438EA370032ECB8 /* ZMSDKGalleryWindowController.m */; };
+		81295D712438EA370032ECB8 /* ZMSDKGalleryWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81295D6F2438EA370032ECB8 /* ZMSDKGalleryWindowController.xib */; };
+		8137F1FD243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8137F1FB243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.m */; };
+		8137F1FE243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8137F1FC243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.xib */; };
 		970CBE321E36F25000B1D255 /* airhost.app in Copy Files */ = {isa = PBXBuildFile; fileRef = 970CBE301E36F24200B1D255 /* airhost.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		971725FA1D3F618A00D5C72D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 971725F91D3F618A00D5C72D /* main.m */; };
 		972215FB1DD06C5100C74CE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 971725FB1D3F618A00D5C72D /* Assets.xcassets */; };
@@ -314,6 +318,12 @@
 		5D8F8ECB222402540020F8E6 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text; name = "pt-PT"; path = "SDK Resources/pt-PT.lproj/timezones.txt"; sourceTree = "<group>"; };
 		5D8F8ECC222402580020F8E6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text; name = ru; path = "SDK Resources/ru.lproj/timezones.txt"; sourceTree = "<group>"; };
 		5D8F8ECD2224025B0020F8E6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text; name = es; path = "SDK Resources/es.lproj/timezones.txt"; sourceTree = "<group>"; };
+		81295D6D2438EA370032ECB8 /* ZMSDKGalleryWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZMSDKGalleryWindowController.h; sourceTree = "<group>"; };
+		81295D6E2438EA370032ECB8 /* ZMSDKGalleryWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMSDKGalleryWindowController.m; sourceTree = "<group>"; };
+		81295D6F2438EA370032ECB8 /* ZMSDKGalleryWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZMSDKGalleryWindowController.xib; sourceTree = "<group>"; };
+		8137F1FA243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZMSDKThumbnailCollectionViewItem.h; sourceTree = "<group>"; };
+		8137F1FB243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMSDKThumbnailCollectionViewItem.m; sourceTree = "<group>"; };
+		8137F1FC243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZMSDKThumbnailCollectionViewItem.xib; sourceTree = "<group>"; };
 		970CBE301E36F24200B1D255 /* airhost.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = airhost.app; path = ZoomSDK/airhost.app; sourceTree = "<group>"; };
 		971725F21D3F618A00D5C72D /* ZoomSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoomSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		971725F91D3F618A00D5C72D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -556,6 +566,12 @@
 				5D38E057221BEF6F00957333 /* ZMSDKThumbnailVideoItemView.m */,
 				5D38E061221BEF8900957333 /* ZMSDKHCPanelistsView.h */,
 				5D38E060221BEF8900957333 /* ZMSDKHCPanelistsView.m */,
+				81295D6D2438EA370032ECB8 /* ZMSDKGalleryWindowController.h */,
+				81295D6E2438EA370032ECB8 /* ZMSDKGalleryWindowController.m */,
+				81295D6F2438EA370032ECB8 /* ZMSDKGalleryWindowController.xib */,
+				8137F1FA243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.h */,
+				8137F1FB243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.m */,
+				8137F1FC243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.xib */,
 			);
 			name = how_to_use_cutomized_video;
 			sourceTree = "<group>";
@@ -786,6 +802,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hans",
@@ -846,6 +863,7 @@
 				5D38E0A2221BF5C500957333 /* SDK_Transcode.app in Resources */,
 				5D38E02B221BEDBD00957333 /* btn_presentshare_normal.png in Resources */,
 				5D38E027221BEDBD00957333 /* toolbar_share_press.png in Resources */,
+				8137F1FE243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.xib in Resources */,
 				5D38E00D221BEDBD00957333 /* plistArrowTop.png in Resources */,
 				5D38E030221BEDBD00957333 /* toolbar_unmute_tele_press.png in Resources */,
 				5D38DFDA221BEC9C00957333 /* ZMSDKMeetingMainWindowController.xib in Resources */,
@@ -872,6 +890,7 @@
 				5D38E028221BEDBD00957333 /* ZoomLogo.png in Resources */,
 				5D38E01A221BEDBD00957333 /* toolbar_mute_voip_normal.png in Resources */,
 				5D38E00A221BEDBD00957333 /* btn_setting_normal.png in Resources */,
+				81295D712438EA370032ECB8 /* ZMSDKGalleryWindowController.xib in Resources */,
 				5D38DFDF221BEC9C00957333 /* ZoomSDKWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -889,6 +908,7 @@
 				5D38E041221BEE8C00957333 /* ZMSDKApiMeetingInterface.m in Sources */,
 				5D38E072221BF04700957333 /* ZMSDKSettingWindowController.m in Sources */,
 				5D38DFC7221BEC4F00957333 /* ZMSDKPTImageButton.m in Sources */,
+				81295D702438EA370032ECB8 /* ZMSDKGalleryWindowController.m in Sources */,
 				5D38E07B221BF0A300957333 /* SDKAppDelegate.m in Sources */,
 				5D38DFDB221BEC9C00957333 /* ZMSDKMainWindowController.m in Sources */,
 				5D38E04D221BEEDB00957333 /* ZMSDKSSOMeetingInterface.m in Sources */,
@@ -902,6 +922,7 @@
 				5D38E047221BEEB200957333 /* ZMSDKEmailMeetingInterface.m in Sources */,
 				5D38E06D221BF02200957333 /* ShareContentView.m in Sources */,
 				5D38E05F221BEF7000957333 /* ZMSDKHCTableItemView.m in Sources */,
+				8137F1FD243A3BC4005A7020 /* ZMSDKThumbnailCollectionViewItem.m in Sources */,
 				5D38E04A221BEEC700957333 /* ZMSDKSSOLogin.m in Sources */,
 				5D38E05D221BEF7000957333 /* ZMSDKThumbnailVideoItemView.m in Sources */,
 				5D38E053221BEF3000957333 /* ZMSDKMeetingStatusMgr.m in Sources */,
@@ -1069,7 +1090,7 @@
 				INFOPLIST_FILE = ZoomSDKSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/ZoomSDK";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = zoom.us.ZoomSDKSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1095,7 +1116,7 @@
 				INFOPLIST_FILE = ZoomSDKSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/ZoomSDK";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = zoom.us.ZoomSDKSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;

@@ -17,6 +17,8 @@
 #pragma mark - app delegate
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
+    
+    
     self.loginWindowCtrl = [[ZMSDKLoginWindowController alloc] init];
     [self.loginWindowCtrl.window makeKeyAndOrderFront:nil];
     [self.loginWindowCtrl.window center];
