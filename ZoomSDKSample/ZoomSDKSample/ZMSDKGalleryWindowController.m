@@ -159,25 +159,37 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
 
 - (NSDragOperation)collectionView:(NSCollectionView *)collectionView validateDrop:(id<NSDraggingInfo>)draggingInfo proposedIndexPath:(NSIndexPath * _Nonnull *)proposedDropIndexPath dropOperation:(NSCollectionViewDropOperation *)proposedDropOperation
 {
-    // NSLog(@"validateDrop: %@", self);
-    return NSDragOperationMove;
+    NSWindow* window = draggingInfo.draggingDestinationWindow;
+    if ([window.windowController isKindOfClass:ZMSDKGalleryWindowController.class])
+    {
+        NSLog(@"validateDrop (NSDragOperationMove): %@", self);
+        return NSDragOperationMove;
+    }
+    
+    NSLog(@"validateDrop (NSDragOperationNone): %@", self);
+    return NSDragOperationNone;
 }
 
 - (void)collectionView:(NSCollectionView *)collectionView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItemsAtIndexPaths:(NSSet<NSIndexPath *> *)indexPaths
 {
-    NSLog(@"willBeginAtPoint: %@", self);
+    NSLog(@"draggingSession: %@", self);
+    
     draggingIndexPaths = indexPaths;
 }
 
 - (void)collectionView:(NSCollectionView *)collectionView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint dragOperation:(NSDragOperation)operation
 {
     NSLog(@"endedAtPoint: %@", self);
-    for (NSIndexPath *indexPath in draggingIndexPaths) {
-        [_videoArray removeObjectAtIndex:indexPath.item];
+
+    if (operation == NSDragOperationMove)
+    {
+        for (NSIndexPath *indexPath in draggingIndexPaths) {
+            [_videoArray removeObjectAtIndex:indexPath.item];
+        }
+        
+        [collectionView reloadData];
     }
-    
     draggingIndexPaths = [NSSet<NSIndexPath *> set];
-    [collectionView reloadData];
 }
 
 - (BOOL)collectionView:(NSCollectionView *)collectionView acceptDrop:(id<NSDraggingInfo>)draggingInfo indexPath:(NSIndexPath *)indexPath dropOperation:(NSCollectionViewDropOperation)dropOperation
