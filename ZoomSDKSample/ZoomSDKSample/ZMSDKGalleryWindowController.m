@@ -8,13 +8,18 @@
 
 #import "ZMSDKGalleryWindowController.h"
 #import "ZMSDKThumbnailCollectionViewItem.h"
+#import "ZMSDKButton.h"
 
 @interface ZMSDKGalleryWindowController ()
 
 @end
 
+@class ZMSDKMeetingMainWindowController;
+
 @implementation ZMSDKGalleryWindowController
 @synthesize collectionView;
+@synthesize meetingMainWindowController = _meetingMainWindowController;
+NSSet<NSIndexPath *> * draggingIndexPaths;
 
 - (void)windowDidLoad {
     [super windowDidLoad];
@@ -35,6 +40,10 @@
         _videoArray = [[NSMutableArray alloc] init];
         [self initUI];
     }
+    
+    draggingIndexPaths = [NSSet<NSIndexPath *> set];
+    NSLog(@"initWithWindow: %@", self);
+    
     return self;
 }
 - (void)awakeFromNib
@@ -66,6 +75,53 @@
     }
 }
 
+- (void)initUI
+{
+    [collectionView registerForDraggedTypes:@[NSPasteboardTypeString]];
+    
+    float xpos = self.window.contentView.frame.size.width/2;
+    float xposLeft = xpos;
+    float xposRight = xpos;
+    float yPos = 2;
+    float width = 80;
+    float height = 60;
+    float margin = 30;
+    ZMSDKButton* theButton = nil;
+    
+    ZMSDKBackgroundView* toolbarBackgroundView = [[ZMSDKBackgroundView alloc] initWithFrame:NSMakeRect(0, 0, self.window.frame.size.width, height + yPos)];
+    toolbarBackgroundView.backGroundColor = [NSColor blackColor];
+    [self.view addSubview:toolbarBackgroundView];
+    [toolbarBackgroundView release];
+    
+    NSColor* titleColor = [NSColor whiteColor];
+    NSColor* pressTitleColor = [NSColor colorWithRed:145/225 green:145/225 blue:145/225 alpha:0];
+    NSColor* pressBgColor = nil;
+    NSColor* hoverBgColor = nil;
+    hoverBgColor = [NSColor colorWithCalibratedWhite:0 alpha:0.5];
+    pressBgColor = [NSColor colorWithCalibratedWhite:0 alpha:0.5];
+    NSFont* theFont = [NSFont systemFontOfSize:12];
+    
+    theButton = [[ZMSDKButton alloc] initWithFrame:NSMakeRect(xpos, yPos, width, height)];
+    theButton.tag = BUTTON_TAG_AUDIO;
+    theButton.title = @"Split";
+    theButton.titleColor = titleColor;
+    theButton.disableTitleColor = [NSColor grayColor];
+    theButton.pressTitleColor = pressTitleColor;
+    theButton.font = theFont;
+    theButton.hoverBackgroundColor = hoverBgColor;
+    theButton.pressBackgoundColor = pressBgColor;
+    theButton.imagePosition = NSImageAbove;
+    theButton.image = [NSImage imageNamed:@"toolbar_mute_voip_normal"];
+    theButton.pressImage = [NSImage imageNamed:@"toolbar_mute_voip_press"];
+    theButton.autoresizingMask = NSViewMaxXMargin;
+    [theButton setTarget:self];
+    [theButton setAction:@selector(onSplitButtonClicked:)];
+    // [theButton setHidden:YES];
+    [self.view addSubview:theButton];
+    [theButton release];
+    theButton = nil;
+}
+
 - (void)showSelf
 {
     [self.window makeKeyAndOrderFront:nil];
@@ -90,18 +146,85 @@
     return item;
 }
 
-- (void)initUI
+- (id<NSPasteboardWriting>)collectionView:(NSCollectionView *)collectionView pasteboardWriterForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"pasteboardWriterForItemAtIndexPath: %@", self);
+    
+    NSPasteboardItem *item = [[NSPasteboardItem alloc] init];
+    ZoomSDKNormalVideoElement *element = [_videoArray objectAtIndex:indexPath.item];
+    [item setString:[NSString stringWithFormat:@"%d", element.userid] forType:NSPasteboardTypeString];
+    
+    return item;
+}
+
+- (NSDragOperation)collectionView:(NSCollectionView *)collectionView validateDrop:(id<NSDraggingInfo>)draggingInfo proposedIndexPath:(NSIndexPath * _Nonnull *)proposedDropIndexPath dropOperation:(NSCollectionViewDropOperation *)proposedDropOperation
+{
+    // NSLog(@"validateDrop: %@", self);
+    return NSDragOperationMove;
+}
+
+- (void)collectionView:(NSCollectionView *)collectionView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItemsAtIndexPaths:(NSSet<NSIndexPath *> *)indexPaths
+{
+    NSLog(@"willBeginAtPoint: %@", self);
+    draggingIndexPaths = indexPaths;
+}
+
+- (void)collectionView:(NSCollectionView *)collectionView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint dragOperation:(NSDragOperation)operation
+{
+    NSLog(@"endedAtPoint: %@", self);
+    for (NSIndexPath *indexPath in draggingIndexPaths) {
+        [_videoArray removeObjectAtIndex:indexPath.item];
+    }
+    
+    draggingIndexPaths = [NSSet<NSIndexPath *> set];
+    [collectionView reloadData];
+}
+
+- (BOOL)collectionView:(NSCollectionView *)collectionView acceptDrop:(id<NSDraggingInfo>)draggingInfo indexPath:(NSIndexPath *)indexPath dropOperation:(NSCollectionViewDropOperation)dropOperation
+{
+    NSLog(@"acceptDrop: %@", self);
+    
+    if (draggingInfo.draggingPasteboard.pasteboardItems) {
+        NSPasteboardItem *item = [draggingInfo.draggingPasteboard.pasteboardItems objectAtIndex:0];
+        NSString *str = [item stringForType:NSPasteboardTypeString];
+        
+        int userId = [str intValue];
+        [self onUserVideoStatusChange:YES UserID:userId];
+    }
+    
+    [collectionView reloadData];
+    
+    return YES;
+}
+
+- (void)onSplitButtonClicked:(id)sender
+{
+    ZMSDKGalleryWindowController *galleryWindow = [[ZMSDKGalleryWindowController alloc] initWithWindowNibName:@"ZMSDKGalleryWindowController"];
+    galleryWindow.meetingMainWindowController = self.meetingMainWindowController;
+    
+    [galleryWindow showSelf];
+    
+    for (int i = 0; i < _videoArray.count; i++) {
+        
+        ZoomSDKVideoElement *videoElement = [_videoArray objectAtIndex:i];
+        if (i < _videoArray.count / 2) {
+            [self onUserleft:videoElement.userid];
+        } else {
+            [galleryWindow onUserVideoStatusChange:YES UserID:videoElement.userid];
+        }
+    }
 }
 
 - (void)onUserJoin:(unsigned int)userID
 {
     return;
 }
+
 - (void)setMeetingMainWindowController:(ZMSDKMeetingMainWindowController*)meetingMainWindowController
 {
     _meetingMainWindowController = meetingMainWindowController;
 }
+
 - (void)onUserleft:(unsigned int)userID
 {
     ZoomSDKVideoElement *videoElement = nil;

@@ -18,7 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray*        _videoArray;//All Video user array
     ZMSDKMeetingMainWindowController* _meetingMainWindowController;
 }
+@property (assign) IBOutlet NSView *view;
 @property (assign) IBOutlet NSCollectionView *collectionView;
+@property(nonatomic, retain, readwrite)ZMSDKMeetingMainWindowController* meetingMainWindowController;
 
 - (void)showSelf;
 - (void)onUserJoin:(unsigned int)userID;
