@@ -110,8 +110,8 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
 
 - (NSSize)collectionView:(NSCollectionView *)collectionView layout:(NSCollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width = self.view.frame.size.width / _videoArray.count;
-    CGFloat height = self.view.frame.size.height / _videoArray.count;
+    CGFloat width = 200;// self.view.frame.size.width / _videoArray.count;
+    CGFloat height = 200; //self.view.frame.size.height / _videoArray.count;
     
     NSLog(@"sizeForItemAtIndexPath: %f, %f", width, height);
     
