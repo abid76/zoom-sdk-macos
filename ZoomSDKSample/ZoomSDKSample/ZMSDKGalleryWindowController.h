@@ -12,12 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZMSDKGalleryWindowController : NSWindowController<NSCollectionViewDelegate, NSCollectionViewDataSource>
+@interface ZMSDKGalleryWindowController : NSWindowController<NSCollectionViewDelegate, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout>
 {
     ZMSDKThumbnailVideoItemView*  itemThumbnailView;
     NSMutableArray*        _videoArray;//All Video user array
     ZMSDKMeetingMainWindowController* _meetingMainWindowController;
 }
+@property (assign) IBOutlet NSButton *splitButton;
 @property (assign) IBOutlet NSView *view;
 @property (assign) IBOutlet NSCollectionView *collectionView;
 @property(nonatomic, retain, readwrite)ZMSDKMeetingMainWindowController* meetingMainWindowController;
