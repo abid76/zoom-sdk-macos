@@ -130,7 +130,7 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
     if (!CGSizeEqualToSize(_lastItemSize, _currentItemSize))
     {
         NSLog(@"Changed maxItemSize to - width: %f, height: %f", size.width, size.height);
-        collectionView.minItemSize q  = _currentItemSize;
+        collectionView.minItemSize = _currentItemSize;
         collectionView.maxItemSize = _currentItemSize;
         [collectionView reloadData];
         
