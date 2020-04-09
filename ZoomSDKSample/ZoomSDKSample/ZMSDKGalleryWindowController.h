@@ -12,15 +12,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static const int MIN_ITEM_WIDTH = 200;
+static const int MIN_ITEM_HEIGHT = 200;
+
 @interface ZMSDKGalleryWindowController : NSWindowController<NSCollectionViewDelegate, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout>
 {
     ZMSDKThumbnailVideoItemView*  itemThumbnailView;
     NSMutableArray*        _videoArray;//All Video user array
     ZMSDKMeetingMainWindowController* _meetingMainWindowController;
 }
+
 @property (assign) IBOutlet NSButton *splitButton;
 @property (assign) IBOutlet NSView *view;
+@property (assign) IBOutlet NSScrollView *scrollView;
 @property (assign) IBOutlet NSCollectionView *collectionView;
+@property (assign) IBOutlet NSCollectionViewFlowLayout *flowLayout;
 @property(nonatomic, retain, readwrite)ZMSDKMeetingMainWindowController* meetingMainWindowController;
 
 - (void)showSelf;

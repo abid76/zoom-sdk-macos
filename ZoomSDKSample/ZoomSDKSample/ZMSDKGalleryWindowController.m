@@ -17,6 +17,11 @@
 @class ZMSDKMeetingMainWindowController;
 
 @implementation ZMSDKGalleryWindowController
+{
+    NSSize _lastItemSize;
+    NSSize _currentItemSize;
+}
+
 @synthesize collectionView;
 @synthesize meetingMainWindowController = _meetingMainWindowController;
 NSSet<NSIndexPath *> * draggingIndexPaths;
@@ -40,6 +45,7 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
     
     draggingIndexPaths = [NSSet<NSIndexPath *> set];
     NSLog(@"initWithWindow: %@", self);
+    
     
     return self;
 }
@@ -74,10 +80,62 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
 
 - (void)initUI
 {
+    _currentItemSize = NSMakeSize(MIN_ITEM_WIDTH, MIN_ITEM_HEIGHT);
+    _lastItemSize = NSMakeSize(MIN_ITEM_WIDTH, MIN_ITEM_HEIGHT);
+    
     [collectionView registerForDraggedTypes:@[NSPasteboardTypeString]];
     
     _splitButton.target = self;
     _splitButton.action = @selector(onSplitButtonClicked:);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(frameDidChange:)
+                                                 name:NSViewFrameDidChangeNotification
+                                               object:self.scrollView];
+}
+
+- (void)frameDidChange:(NSNotification*)notification
+{
+    NSView* view = self.scrollView;
+    CGFloat width = view.frame.size.height;
+    CGFloat height = view.frame.size.height;
+    
+    NSLog(@"frameDidChange - view: %@, width: %f, height: %f", view, width, height);
+    
+    NSSize size;
+    if (_videoArray.count == 1)
+    {
+        size = NSMakeSize(width, height);
+    }
+    else if (_videoArray.count <= 4)
+    {
+        size = NSMakeSize(width / 2, height / 2);
+    }
+    else if (_videoArray.count <= 8)
+    {
+        size = NSMakeSize(width / 4, height / 4);
+    }
+    else
+    {
+        size = NSMakeSize(width / 8, height / 8);
+    }
+    
+    if (size.width <= MIN_ITEM_WIDTH || size.height <= MIN_ITEM_HEIGHT)
+    {
+        size = NSMakeSize(MIN_ITEM_WIDTH, MIN_ITEM_HEIGHT);
+    }
+    
+    _currentItemSize = size;
+    
+    if (!CGSizeEqualToSize(_lastItemSize, _currentItemSize))
+    {
+        NSLog(@"Changed maxItemSize to - width: %f, height: %f", size.width, size.height);
+        collectionView.minItemSize q  = _currentItemSize;
+        collectionView.maxItemSize = _currentItemSize;
+        [collectionView reloadData];
+        
+        _lastItemSize = _currentItemSize;
+    }
 }
 
 - (void)showSelf
@@ -99,8 +157,12 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
 {
     ZMSDKThumbnailCollectionViewItem* item = [collectionView makeItemWithIdentifier:@"ZMSDKThumbnailCollectionViewItem" forIndexPath:indexPath];
     ZoomSDKVideoElement* thumbnailView = [_videoArray objectAtIndex:indexPath.item];
-    thumbnailView.videoView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    thumbnailView.videoView.frame = item.view.bounds;
     [item.view addSubview:thumbnailView.videoView];
+    
+    item.view.wantsLayer = YES;
+    item.view.layer.borderWidth = 2;
+    item.view.layer.borderColor = [[NSColor blackColor] CGColor];
     
     NSLog(@"View: Width: %f, Height: %f", item.view.frame.size.width, item.view.frame.size.height);
     NSLog(@"VideoView: Width: %f, Height: %f", thumbnailView.videoView.frame.size.width, thumbnailView.videoView.frame.size.height);
@@ -110,12 +172,9 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
 
 - (NSSize)collectionView:(NSCollectionView *)collectionView layout:(NSCollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width = 200;// self.view.frame.size.width / _videoArray.count;
-    CGFloat height = 200; //self.view.frame.size.height / _videoArray.count;
+    NSLog(@"sizeForItemAtIndexPath: %f, %f", _currentItemSize.width, _currentItemSize.height);
     
-    NSLog(@"sizeForItemAtIndexPath: %f, %f", width, height);
-    
-    return NSMakeSize(width, height);
+    return _currentItemSize;
 }
 
 - (CGFloat)collectionView:(NSCollectionView *)collectionView layout:(NSCollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
@@ -167,6 +226,7 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
     {
         for (NSIndexPath *indexPath in draggingIndexPaths) {
             [_videoArray removeObjectAtIndex:indexPath.item];
+            NSLog(@"Removed Item at index: %d - current count: %d", indexPath.item, _videoArray.count);
         }
         
         [collectionView reloadData];
@@ -184,11 +244,13 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
         
         int userId = [str intValue];
         [self onUserVideoStatusChange:YES UserID:userId];
+        
+        [collectionView reloadData];
+        
+        return YES;
     }
     
-    [collectionView reloadData];
-    
-    return YES;
+    return NO;
 }
 
 - (void)onSplitButtonClicked:(id)sender
@@ -253,11 +315,12 @@ NSSet<NSIndexPath *> * draggingIndexPaths;
     }
     if(!hasExist)
     {
-        ZoomSDKNormalVideoElement* videoItem = [[ZoomSDKNormalVideoElement alloc] initWithFrame:NSMakeRect(0, 0, 200, 200)];
+        ZoomSDKNormalVideoElement* videoItem = [[ZoomSDKNormalVideoElement alloc] initWithFrame:NSMakeRect(0, 0, _currentItemSize.width, _currentItemSize.height)];
         ZoomSDKVideoContainer* videoContainer = [[[ZoomSDK sharedSDK] getMeetingService] getVideoContainer];
         [videoContainer createVideoElement:&videoItem];
         videoItem.userid = userID;
         [_videoArray addObject:videoItem];
+        NSLog(@"Added Item with userID: %d", userID);
         
         [collectionView reloadData];
     }

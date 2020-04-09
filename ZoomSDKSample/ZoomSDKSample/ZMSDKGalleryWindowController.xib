@@ -9,6 +9,8 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ZMSDKGalleryWindowController">
             <connections>
                 <outlet property="collectionView" destination="qA8-oW-xNZ" id="HZ8-ER-UcG"/>
+                <outlet property="flowLayout" destination="3gw-fn-Yfb" id="8BG-v8-uTD"/>
+                <outlet property="scrollView" destination="r05-e6-xJC" id="MEo-eX-L9f"/>
                 <outlet property="splitButton" destination="raU-hE-TKq" id="Vdz-m6-ljS"/>
                 <outlet property="view" destination="se5-gp-TjO" id="t04-WY-Qu1"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
